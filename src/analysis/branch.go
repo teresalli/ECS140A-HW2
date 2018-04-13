@@ -7,28 +7,28 @@ import (
 )
 
 func branchCount(fn *ast.FuncDecl) uint {
-    var answer uint
-    answer = 0
-    for _, item := range fn.Body.List {
-        switch i := item.(type) {
-        case *ast.ForStmt, *ast.RangeStmt:
-            answer += 1
-        case *ast.SelectStmt:
-            answer += 1
-        case *ast.SwitchStmt, *ast.TypeSwitchStmt: 
-            answer += 1
-        case *ast.IfStmt:
-            answer += 1 + ElseCount(i)
-        }
+  var answer uint
+  answer = 0
+  for _, item := range fn.Body.List {
+      switch i := item.(type) {
+      case *ast.ForStmt, *ast.RangeStmt:
+        answer += 1
+      case *ast.SelectStmt:
+        answer += 1
+      case *ast.SwitchStmt, *ast.TypeSwitchStmt:
+        answer += 1
+      case *ast.IfStmt:
+        answer += 1 + ElseCount(i)
+      }
     }
     return answer
 }
 
 func ElseCount(i *ast.IfStmt) uint {
-    if i.Else == nil {
-        return 0
-    }
-    return 1
+  if i.Else == nil {
+    return 0
+  }
+  return 1
 }
 
 func ComputeBranchFactors(src string) map[string]uint {
