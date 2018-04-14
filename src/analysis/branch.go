@@ -10,18 +10,15 @@ func branchCount(fn *ast.FuncDecl) uint {
   var answer uint
   answer = 0
   for _, item := range fn.Body.List {
-      switch i := item.(type) {
-      case *ast.ForStmt, *ast.RangeStmt:
-        answer += 1
-      case *ast.SelectStmt:
-        answer += 1
-      case *ast.SwitchStmt, *ast.TypeSwitchStmt:
-        answer += 1
-      case *ast.IfStmt:
-        answer += 1 + ElseCount(i)
-      }
+    switch i := item.(type) {
+    case *ast.ForStmt, *ast.RangeStmt, *ast.SelectStmt,
+    *ast.SwitchStmt,  *ast.TypeSwitchStmt:
+      answer++
+    case *ast.IfStmt:
+      answer += 1 + ElseCount(i)
     }
-    return answer
+  }
+  return answer
 }
 
 func ElseCount(i *ast.IfStmt) uint {
