@@ -6,8 +6,25 @@ import (
   "go/token"
 )
 
+func countStmt(start ast.Stmt, answer uint) uint {
+  switch start.(type) {
+  case *ast.IfStmt:
+    answer++
+  default:
+    answer++
+  }
+  return answer
+}
+
 func cyclomatic(node ast.Stmt) uint {
-  panic("TODO: implement this!")
+  var answer uint
+  answer = 0
+  if fn,ok := node.(*ast.BlockStmt); ok{
+    for _, item := range fn.List {
+      answer = countStmt(item, answer)
+    }
+  }
+  return answer
 }
 
 func CyclomaticComplexity(src string) map[string]uint {
