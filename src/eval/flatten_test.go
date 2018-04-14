@@ -16,6 +16,7 @@ func TestFlattenUnits(t *testing.T) {
     want_unit string
   } {
     {"10", 10, "scalar"},
+    {"-km(10)", -10, "km"},
     {"km(10)", 10, "km"},
     {"km(km(10))", 10, "km"},
     {"m(km(10))", 10000, "m"},
@@ -73,6 +74,40 @@ func TestFlattenUnits(t *testing.T) {
     }
   }
 }
+
+func TestFlattenUnits2(t *testing.T) {
+  tests := []struct {
+    expr string
+    want_mag Var
+    want_unit string
+  } {
+    {"X", Var("X"), "scalar"},
+  }
+
+  for _, test := range tests {
+    expr, err := Parse(test.expr)
+    if err != nil {
+      t.Error(err) // parse error
+      continue
+    }
+
+    fmt.Printf("\n%s\n", test.expr)
+
+    // Run the method
+    expr, unit := expr.FlattenUnits()
+
+    // Display the result
+    got := expr.Eval(Env{})
+    fmt.Printf("\t%s => %g [%s]\n", Format(expr), got, unit)
+
+    // Check the result
+    if expr != test.want_mag || unit != test.want_unit {
+      t.Errorf("(%s).FlattenUnits() = %g [%q], want %s [%q]\n",
+        test.expr, got, unit, test.want_mag, test.want_unit)
+    }
+  }
+}
+
 
 func TestFlattenUnits_Failure(t *testing.T) {
   tests := []struct {

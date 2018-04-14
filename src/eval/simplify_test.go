@@ -18,6 +18,9 @@ func TestSimplify(t *testing.T) {
     {"X + 0", Env{}, "X"},
     {"1 * X", Env{}, "X"},
     {"X * 1", Env{}, "X"},
+    {"-X", Env{}, "(-X)"},
+    {"-X", Env{"X": 1}, "(-1)"},
+    {"-(X + X)", Env{"X": 1}, "(-2)"},
     {"10 / X", Env{"X": 2}, "5"},
     {"(X + X) - Y", Env{"X": 2}, "(4 - Y)"},
     {"(X + X) - Y", Env{"Y": 8}, "((X + X) - 8)"},
@@ -47,6 +50,34 @@ func TestSimplify(t *testing.T) {
       t.Errorf("(%s).Simplify() in %v = %q, want %q\n",
         test.expr, test.env, got, test.want)
     }
+  }
+}
+
+//Test failure case
+func TestSimplify_Failure(t *testing.T) {
+  tests := []struct {
+    expr string
+    env  Env
+  } {
+    {"km(km(10))", Env{}},
+    {"mi(10)", Env{}},
+  }
+
+  for _, test := range tests {
+    expr, err := Parse(test.expr)
+    if err != nil {
+      t.Error(err) // parse error
+      continue
+    }
+    func() {
+      defer func() {
+        if recover() == nil {
+          t.Errorf("(%s).Simplify() did not panic, but should\n", test.expr)
+        }
+      }()
+      // The following is the code under test
+      expr.Simplify(test.env)
+    }()
   }
 }
 //!-Simplify

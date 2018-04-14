@@ -16,7 +16,8 @@ func TestComputeBranchFactors(t *testing.T) {
     )
 
     func f() {
-      return 42
+      x := 42
+      return x
     }
 
     func g(x int) {
@@ -31,13 +32,20 @@ func TestComputeBranchFactors(t *testing.T) {
       } else {
         return 0;
       }
-      
+
       if x < 0 {
         return -1;
       }
     }
 
     func h() {
+      select {
+      case msg1 := <-"one":
+          fmt.Println("received", msg1)
+      case msg2 := <-"two":
+          fmt.Println("received", msg2)
+      }
+
       switch 5 {
       case 0:
         // pass
@@ -55,7 +63,7 @@ func TestComputeBranchFactors(t *testing.T) {
   }{
     {"f", 0},
     {"g", 4},
-    {"h", 1},
+    {"h", 2},
   }
 
   branch_factors := ComputeBranchFactors(test_code)
@@ -66,5 +74,25 @@ func TestComputeBranchFactors(t *testing.T) {
         test.name, branch_factors[test.name], test.branches)
     }
   }
+}
+
+func TestComputeBranchFactors_Failure(t *testing.T) {
+  var test_code = `
+    package main
+
+    func f() {
+      x := 42
+      fmt.Println(x
+      return x
+    }
+
+  `
+      defer func() {
+        if recover() == nil {
+          t.Errorf("ComputeBranchFactors() did not panic, but should\n")
+        }
+      }()
+
+      ComputeBranchFactors(test_code)
 }
 //!-ComputeBranchFactors
