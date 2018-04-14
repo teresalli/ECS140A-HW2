@@ -6,7 +6,7 @@ import (
 	"go/format"
 	"go/parser"
 	"go/token"
-  //"strings"
+  "strings"
   "fmt"
 	"eval"
 	"strconv"
@@ -21,15 +21,20 @@ func (v *FuncVisitor) Visit(node ast.Node) (w ast.Visitor)  {
     if name,ok := call.Fun.(*ast.SelectorExpr); ok{
       // function call found
       if name.Sel.Name == "ParseAndEval" {
+        // not valid call
+        if len(call.Args) == 1 {
+          return v
+        }
         if item,ok := call.Args[0].(*ast.BasicLit); ok{
-          num,_ := eval.ParseAndEval(item.Value, eval.Env{})
-          fmt.Println(item.Value)
-          item.Value = strconv.Itoa(int(num))
+          src := strings.Trim(item.Value, "\"")
+          num,err := eval.ParseAndEval(src, eval.Env{})
+          if err == nil {
+            item.Value = fmt.Sprintf("\"%s\"", strconv.Itoa(int(num)))
+          }
         }
       }
     }
   }
-
   return v
 }
 
@@ -46,7 +51,6 @@ func SimplifyParseAndEval(src string) string {
 	}
   //ast.Print(fset, f)
 	rewriteCalls(f)
-  //ast.Print(fset, f)
 
 	var buf bytes.Buffer
 	format.Node(&buf, fset, f)
