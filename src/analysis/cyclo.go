@@ -6,44 +6,77 @@ import (
 	"go/token"
 )
 
-type visitor struct {
-  Complexity uint
-}
 
-func (v *visitor) Visit(node ast.Node) (w ast.Visitor) {
-	switch n := node.(type) {
+func cyclo(start ast.Stmt) uint {
+  var answer uint
+	switch fn := start.(type){
+  case *ast.BlockStmt:
+      answer = 1
+		for _,item := range fn.List {
+			answer *= cyclo(item)
+		}
+    return answer;
+  case *ast.CaseClause:
+		answer = 1
+		for _,item := range fn.Body {
+			answer *= cyclo(item)
+		}
+    return answer;
+  case *ast.SwitchStmt:
+		answer = 0;
+		var flag = false
+    if fn.Body.List != nil {
+		  for _, item := range fn.Body.List {
+			  answer += cyclo(item)
+				if item1, ok := item.(*ast.CaseClause); ok{
+					if item1.List == nil {
+						flag = true
+					}
+				}
+		  }
+  	}
+		if !flag {
+			answer++
+		}
+    return answer;
+	case  *ast.TypeSwitchStmt:
+		answer = 0;
+		var flag = false
+    if fn.Body.List != nil {
+		  for _, item := range fn.Body.List {
+			  answer += cyclo(item)
+				if item1,ok := item.(*ast.CaseClause); ok{
+					if item1.List == nil {
+						flag = true
+					}
+				}
+		  }
+  	}
+		if !flag {
+			answer++
+		}
+    return answer;
 	case *ast.IfStmt:
-		v.Complexity++
-	case *ast.ForStmt, *ast.RangeStmt:
-		v.Complexity++
-	case *ast.CaseClause:
-		if n.List != nil {
-			v.Complexity++
+		return cyclo(fn.Body) + cyclo(fn.Else);
+	case *ast.ForStmt:
+		answer = 1
+		for _,item := range fn.Body.List {
+			answer *= cyclo(item)
 		}
-	case *ast.CommClause:
-		if n.Comm != nil {
-			v.Complexity++
+    return answer + 1;
+	case *ast.RangeStmt:
+		answer = 1
+		for _,item := range fn.Body.List {
+			answer *= cyclo(item)
 		}
+    return answer + 1;
+	default:
+		return 1;
 	}
-	return v
-}
-
-func countStmt(start ast.Stmt) uint {
-  v := new(visitor)
-  v.Complexity = 1
-  ast.Walk(v, start)
-	return v.Complexity
 }
 
 func cyclomatic(node ast.Stmt) uint {
-	var answer uint
-	answer = 0
-	if fn, ok := node.(*ast.BlockStmt); ok {
-		for _, item := range fn.List {
-			answer += countStmt(item)
-		}
-	}
-	return answer
+	return cyclo(node)
 }
 
 func CyclomaticComplexity(src string) map[string]uint {

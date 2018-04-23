@@ -39,13 +39,6 @@ func TestComputeBranchFactors(t *testing.T) {
     }
 
     func h() {
-      select {
-      case msg1 := <-"one":
-          fmt.Println("received", msg1)
-      case msg2 := <-"two":
-          fmt.Println("received", msg2)
-      }
-
       switch 5 {
       case 0:
         // pass
@@ -63,7 +56,7 @@ func TestComputeBranchFactors(t *testing.T) {
   }{
     {"f", 0},
     {"g", 4},
-    {"h", 2},
+    {"h", 1},
   }
 
   branch_factors := ComputeBranchFactors(test_code)
