@@ -59,17 +59,9 @@ func cyclo(start ast.Stmt) uint {
 	case *ast.IfStmt:
 		return cyclo(fn.Body) + cyclo(fn.Else);
 	case *ast.ForStmt:
-		answer = 1
-		for _,item := range fn.Body.List {
-			answer *= cyclo(item)
-		}
-    return answer + 1;
+    return cyclo(fn.Body) + 1;
 	case *ast.RangeStmt:
-		answer = 1
-		for _,item := range fn.Body.List {
-			answer *= cyclo(item)
-		}
-    return answer + 1;
+		return cyclo(fn.Body) + 1;
 	default:
 		return 1;
 	}
