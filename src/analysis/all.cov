@@ -1,4 +1,18 @@
 mode: set
+analysis/rewrite.go:16.60,17.29 1 1
+analysis/rewrite.go:40.2,40.10 1 1
+analysis/rewrite.go:18.21,19.51 1 1
+analysis/rewrite.go:19.51,21.40 1 1
+analysis/rewrite.go:21.40,22.60 1 1
+analysis/rewrite.go:22.60,24.29 1 1
+analysis/rewrite.go:27.6,27.54 1 1
+analysis/rewrite.go:24.29,26.7 1 1
+analysis/rewrite.go:27.54,31.21 3 1
+analysis/rewrite.go:31.21,34.8 2 1
+analysis/rewrite.go:44.34,46.2 1 1
+analysis/rewrite.go:48.46,51.16 3 1
+analysis/rewrite.go:55.2,59.21 4 1
+analysis/rewrite.go:51.16,52.13 1 1
 analysis/branch.go:9.41,12.37 3 1
 analysis/branch.go:21.3,21.16 1 1
 analysis/branch.go:12.37,13.29 1 1
@@ -47,17 +61,3 @@ analysis/cyclo.go:89.2,89.10 1 1
 analysis/cyclo.go:77.16,78.13 1 1
 analysis/cyclo.go:82.31,83.28 1 1
 analysis/cyclo.go:84.22,85.41 1 1
-analysis/rewrite.go:16.60,17.29 1 1
-analysis/rewrite.go:40.2,40.10 1 1
-analysis/rewrite.go:18.21,19.51 1 1
-analysis/rewrite.go:19.51,21.40 1 1
-analysis/rewrite.go:21.40,22.60 1 1
-analysis/rewrite.go:22.60,24.29 1 1
-analysis/rewrite.go:27.6,27.54 1 1
-analysis/rewrite.go:24.29,26.7 1 1
-analysis/rewrite.go:27.54,31.21 3 1
-analysis/rewrite.go:31.21,34.8 2 1
-analysis/rewrite.go:44.34,46.2 1 1
-analysis/rewrite.go:48.46,51.16 3 1
-analysis/rewrite.go:55.2,59.21 4 1
-analysis/rewrite.go:51.16,52.13 1 1

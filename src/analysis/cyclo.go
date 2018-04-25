@@ -11,7 +11,7 @@ func cyclo(start ast.Stmt) uint {
   var answer uint
 	switch fn := start.(type){
   case *ast.BlockStmt:
-      answer = 1
+    answer = 1
 		for _,item := range fn.List {
 			answer *= cyclo(item)
 		}

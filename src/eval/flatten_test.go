@@ -18,6 +18,7 @@ func TestFlattenUnits(t *testing.T) {
     {"10", 10, "scalar"},
     {"-km(10)", -10, "km"},
     {"km(10)", 10, "km"},
+    {"km(X+2)", 0, "km"},
     {"km(km(10))", 10, "km"},
     {"m(km(10))", 10000, "m"},
     {"F(C(0))", 32, "F"},
